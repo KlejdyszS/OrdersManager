@@ -5,8 +5,14 @@ const formFields = [  { id: 'email', name: 'email', label: 'Email', type: 'email
 
 const statusOptions = [  { label: 'Nowe', value: 'Nowe' },  { label: 'W trakcie realizacji', value: 'W trakcie realizacji' },  { label: 'Zrealizowane', value: 'Zrealizowane' },{ label: 'Oczekuje na płatność', value: 'Oczekuje na płatność' },];
 
-const tableHeaders = [ { name: '_id', label: 'ID' }, { name: 'email', label: 'Email' },  { name: 'quantity', label: 'Quantity' },  { name: 'model', label: 'Model' },  { name: 'color', label: 'Color' },  { name: 'status', label: 'Status' },];
-
+const tableHeaders = [
+  { name: '_id', label: 'ID', type: 'text', className: 'px-4 py-2 w-1/10' },
+  { name: 'email', label: 'Email', type: 'email', className: 'px-4 py-2 w-1/10' },
+  { name: 'quantity', label: 'Quantity', type: 'number', className: 'px-4 py-2 w-1/10' },
+  { name: 'model', label: 'Model', type: 'text', className: 'px-4 py-2 w-1/10' },
+  { name: 'color', label: 'Color', type: 'text', className: 'px-4 py-2 w-1/10' },
+  { name: 'status', label: 'Status', type: 'select', className: 'px-4 py-2 w-1/10' },
+];
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -112,8 +118,10 @@ function App() {
     });
     setOrders(updatedOrders);
   };
+
+  
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-6/1 mx-auto p-4">
      <form
   onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
   className="max-w-md mx-auto rounded-md bg-white shadow-md my-4 p-4"
@@ -163,59 +171,64 @@ function App() {
     </button>
   </div>
 </form>
-      <table className="table-auto w-full">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">#</th>
-            {tableHeaders.map((header) => (
-              <th key={header.name} className="px-4 py-2">
-                {header.label}
-              </th>
-            ))}
-            <th className="px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-        {orders.map((order, index) => (
-  <tr key={order._id}>
-    <td className="border px-4 py-2">{index + 1}</td>
-    {tableHeaders.map((header) => (
-      <td key={header.name} className="border px-4 py-2">
-        {header.name === 'status' ? (
-          <select
-            value={order[header.name]}
-            onChange={(e) => handleFieldChange(e, order._id, header.name)}
-            className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
-          >
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        ) : (
-          order[header.name]
-        )}
-      </td>
-    ))}
-    <td className="border px-4 py-2">
-      <button
-        onClick={() => handleDeleteClick(order._id)}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+<table className="table-auto w-full">
+  <thead>
+    <tr>
+      <th className="px-4 py-2 w-1/10">#</th>
+      {tableHeaders.map((header) => (
+        <th key={header.name} className={header.className}>
+          {header.label}
+        </th>
+      ))}
+      <th className="px-4 py-2 w-1/24">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {orders.map((order, index) => (
+      <tr key={order._id}>
+        <td className="border px-4 py-2 w-1/12">{index + 1}</td>
+        {tableHeaders.map((header) => (
+  <td key={header.name} className="border px-4 py-2 w-1/8">
+    {header.type === 'select' ? (
+      <select
+        value={order[header.name]}
+        onChange={(e) => handleFieldChange(e, order._id, header.name)}
+        className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
       >
-        Delete
-      </button>
-      <button
-        onClick={() => handleEditClick(order)}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Edit
-      </button>
-    </td>
-  </tr>
+        {statusOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <input
+        type={header.type}
+        value={order[header.name]}
+        onChange={(e) => handleFieldChange(e, order._id, header.name)}
+        className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3 "
+      />
+    )}
+  </td>
 ))}
-      </tbody>
-    </table>
+        <td className="border px-4 py-2 w-1/6">
+          <button
+            onClick={() => handleDeleteClick(order._id)}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => handleEditClick(order)}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Edit
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
   </div>
 );}
 export default App;
