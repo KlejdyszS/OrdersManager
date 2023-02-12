@@ -202,12 +202,8 @@ function App() {
         ))}
       </select>
     ) : (
-      <input
-        type={header.type}
-        value={order[header.name]}
-        onChange={(e) => handleFieldChange(e, order._id, header.name)}
-        className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3 "
-      />
+      <span>{order[header.name]}</span>
+
     )}
   </td>
 ))}
