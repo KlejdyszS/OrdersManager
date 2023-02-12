@@ -29,7 +29,7 @@ const Order = mongoose.model('Order', orderSchema);
 
 app.get('/orders', async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().select('_id email quantity model color status');
     res.json(orders);
   } catch (err) {
     console.error(err);
