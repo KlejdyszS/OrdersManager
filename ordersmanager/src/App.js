@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const formFields = [  { id: 'email', name: 'email', label: 'Email', type: 'email' },  { id: 'quantity', name: 'quantity', label: 'Quantity', type: 'number' },  { id: 'model', name: 'model', label: 'Model', type: 'text' },  { id: 'color', name: 'color', label: 'Color', type: 'text' },];
+
+const statusOptions = [  { label: 'Nowe', value: 'Nowe' },  { label: 'W trakcie realizacji', value: 'W trakcie realizacji' },  { label: 'Zrealizowane', value: 'Zrealizowane' },];
+
+const tableHeaders = [  { name: 'email', label: 'Email' },  { name: 'quantity', label: 'Quantity' },  { name: 'model', label: 'Model' },  { name: 'color', label: 'Color' },  { name: 'status', label: 'Status' },];
+
+
 function App() {
   const [orders, setOrders] = useState([]);
-
   const [newOrder, setNewOrder] = useState({
     email: '',
     quantity: '',
@@ -13,7 +19,8 @@ function App() {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:5000/orders')
+    axios
+      .get('http://localhost:5000/orders')
       .then((res) => {
         setOrders(res.data);
       })
@@ -41,7 +48,8 @@ function App() {
   const handleAddOrder = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:5000/orders', newOrder)
+    axios
+      .post('http://localhost:5000/orders', newOrder)
       .then((res) => {
         setOrders([...orders, res.data]);
         setNewOrder({
@@ -58,7 +66,8 @@ function App() {
   };
 
   const handleUpdateOrder = (id) => {
-    axios.put(`http://localhost:5000/orders/${id}`, newOrder)
+    axios
+      .put(`http://localhost:5000/orders/${id}`, newOrder)
       .then(() => {
         const updatedOrders = orders.map((order) => {
           if (order._id === id) {
@@ -83,7 +92,8 @@ function App() {
   };
 
   const handleDeleteClick = (id) => {
-    axios.delete(`http://localhost:5000/orders/${id}`)
+    axios
+      .delete(`http://localhost:5000/orders/${id}`)
       .then(() => {
         const updatedOrders = orders.filter((order) => order._id !== id);
         setOrders(updatedOrders);
@@ -105,161 +115,92 @@ function App() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <form onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder} className="max-w-sm mx-auto p-4 rounded-md bg-white shadow-md mb-4">
+      <form
+        onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
+        className="max-w-sm mx-auto p-4 rounded-md bg-white shadow-md mb-4"
+      >
         <h2 className="text-lg font-medium mb-4">{newOrder._id ? 'Edit Order' : 'Add New Order'}</h2>
+        {formFields.map((field) => (
+          <div key={field.id} className="mb-4">
+            <label htmlFor={field.name} className="block text-gray-700 font-bold mb-2">
+              {field.label}:
+            </label>
+            <input
+              type={field.type}
+              id={field.name}
+              name={field.name}
+              value={newOrder[field.name]}
+              onChange={handleInputChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
+        ))}
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-            Email:
+          <label htmlFor="status" className="block text-gray-700 font-bold mb-2">
+            Status:
           </label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={newOrder.email}
-            onChange={handleInputChange}
+          <select
+            id="status"
+            name="status"
+            value={newOrder.status}
+            onChange={(e) => handleStatusChange(e, newOrder._id)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          >
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="mb-4">
-          <label htmlFor="quantity" className="block text-gray-700 font-bold mb-2">
-          Quantity:
-</label>
-<input
-         type="number"
-         id="quantity"
-         name="quantity"
-         value={newOrder.quantity}
-         onChange={handleInputChange}
-         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-       />
-</div>
-<div className="mb-4">
-<label htmlFor="model" className="block text-gray-700 font-bold mb-2">
-Model:
-</label>
-<input
-         type="text"
-         id="model"
-         name="model"
-         value={newOrder.model}
-         onChange={handleInputChange}
-         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-       />
-</div>
-<div className="mb-4">
-<label htmlFor="color" className="block text-gray-700 font-bold mb-2">
-Color:
-</label>
-<input
-         type="text"
-         id="color"
-         name="color"
-         value={newOrder.color}
-         onChange={handleInputChange}
-         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-       />
-</div>
-<div className="mb-4">
-<label htmlFor="status" className="block text-gray-700 font-bold mb-2">
-Status:
-</label>
-<select
-id="status"
-name="status"
-value={newOrder.status}
-onChange={(e) => handleStatusChange(e, newOrder._id)}
-className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
->
-<option value="Nowe">Nowe</option>
-<option value="W realizacji">W realizacji</option>
-<option value="Zrealizowane">Zrealizowane</option>
-<option value="Oczekuje na płatność">Oczekuje na płatność</option>
-<option value="Anulowane">Anulowane</option>
-</select>
-</div>
-<div className="text-center">
-<button
-         type="submit"
-         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-       >
-{newOrder._id ? 'Update Order' : 'Add Order'}
-</button>
-</div>
-</form>
-<table className="table-auto w-full">
-<thead>
-<tr>
-<th className="px-4 py-2">#</th>
-<th className="px-4 py-2">Email</th>
-<th className="px-4 py-2">Quantity</th>
-<th className="px-4 py-2">Model</th>
-<th className="px-4 py-2">Color</th>
-<th className="px-4 py-2">Status</th>
-<th className="px-4 py-2">Actions</th>
-</tr>
-</thead>
-<tbody>
-{orders.map((order, index) => (
-<tr key={order._id}>
-<td className="border px-4 py-2">{index + 1}</td>
-<td className="border px-4 py-2">{order.email}</td>
-<td className="border px-4 py-2">
-            <input
-              type="number"
-              defaultValue={order.quantity}
-              onChange={(e) => handleFieldChange(e, order._id, 'quantity')}
-              className="w-full"
-            />
-          </td>
-          <td className="border px-4 py-2">
-            <input
-              type="text"
-              defaultValue={order.model}
-              onChange={(e) => handleFieldChange(e, order._id, 'model')}
-              className="w-full"
-            />
-          </td>
-          <td className="border px-4 py-2">
-            <input
-              type="text"
-              defaultValue={order.color}
-              onChange={(e) => handleFieldChange(e, order._id, 'color')}
-              className="w-full"
-            />
-          </td>
-          <td className="border px-4 py-2">
-            <select
-              defaultValue={order.status}
-              onChange={(e) => handleStatusChange(e, order._id)}
-              className="w-full"
-            >
-              <option value="Nowe">Nowe</option>
-              <option value="W realizacji">W realizacji</option>
-              <option value="Zrealizowane">Zrealizowane</option>
-              <option value="Oczekuje na płatność">Oczekuje na płatność</option>
-              <option value="Anulowane">Anulowane</option>
-            </select>
-          </td>
-          <td className="border px-4 py-2">
-            <button
-              onClick={() => handleDeleteClick(order._id)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => handleEditClick(order._id)}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Edit
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-);
-}
-
+        <div className="text-center">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            {newOrder._id ? 'Update Order' : 'Add Order'}
+          </button>
+        </div>
+      </form>
+      <table className="table-auto w-full">
+        <thead>
+          <tr>
+            <th className="px-4 py-2">#</th>
+            {tableHeaders.map((header) => (
+              <th key={header.name} className="px-4 py-2">
+                {header.label}
+              </th>
+            ))}
+            <th className="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.map((order, index) => (
+            <tr key={order._id}>
+              <td className="border px-4 py-2">{index + 1}</td>
+              {tableHeaders.map((header) => (
+                <td key={header.name} className="border px-4 py-2">
+                  {order[header.name]}
+                </td>
+              ))}
+              <td className="border px-4 py-2">
+                <button
+                  onClick={() => handleDeleteClick(order._id)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+                >
+                  Delete
+                </button>
+                <button
+                onClick={() => handleEditClick(order)}
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Edit
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);}
 export default App;
