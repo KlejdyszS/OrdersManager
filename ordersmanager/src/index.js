@@ -4,9 +4,11 @@ import styles from "./index.css"
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'tailwindcss/tailwind.css';
+import './dark-mode.css';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
     <App />

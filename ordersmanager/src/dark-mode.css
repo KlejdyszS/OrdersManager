@@ -1,0 +1,59 @@
+/* dark-mode.css */
+
+.root {
+  --color-bg: #1a202c;
+  --color-text: #f7fafc;
+  --color-bg-alt: #2d3748;
+  --color-text-alt: #cbd5e0;
+  --color-primary: #5a67d8;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #f7fafc;
+    --color-text: #1a202c;
+    --color-bg-alt: #e2e8f0;
+    --color-text-alt: #4a5568;
+    --color-primary: #5a67d8;
+  }
+}
+.dark-mode {
+  --color-bg: #1a202c;
+  --color-text: #f7fafc;
+}
+
+.dark-mode .text-gray-700 {
+  color: #cbd5e0;
+}
+
+.dark-mode .text-white {
+  color: #f7fafc;
+}
+
+.dark-mode .bg-gray-100 {
+  background-color: #4a5568;
+}
+
+.dark-mode .bg-white {
+  background-color: #1a202c;
+}
+
+.dark-mode .table-auto {
+  border-color: #cbd5e0;
+}
+
+.dark-mode .table-auto th {
+  background-color: #2d3748;
+  color: #f7fafc;
+}
+
+.dark-mode .table-auto td {
+  background-color: #2d3748;
+  color: #cbd5e0;
+}
+
+.dark-mode .table-auto th,
+.dark-mode .table-auto td {
+  border-color: #cbd5e0;
+}
+

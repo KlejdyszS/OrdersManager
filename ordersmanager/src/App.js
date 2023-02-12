@@ -121,7 +121,8 @@ function App() {
 
   
   return (
-    <div className="max-w-6/1 mx-auto p-4">
+    <div>
+    <div className="max-w-6/1 mx-auto p-4 ">
      <form
   onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
   className="max-w-md mx-auto rounded-md bg-white shadow-md my-4 p-4"
@@ -225,6 +226,7 @@ function App() {
     ))}
   </tbody>
 </table>
+  </div>
   </div>
 );}
 export default App;
