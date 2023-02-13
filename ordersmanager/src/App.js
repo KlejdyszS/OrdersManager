@@ -130,61 +130,57 @@ function App() {
           <div key={option.value} className="px-4 py-2 border-b">{option.label}</div>
         ))}
       </div>
-      <div className="w-1/6 bg-gray-200"> {/* First collumn */}
-      <button  className="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowForm(!showForm) }>Toggle Form</button>
+      <div className="w-1/8 bg-gray-200"> {/* First collumn */}
+        <button className="bg-blue-500 text-white py-2 px-4 m-4 rounded focus:outline-none focus:shadow-outline w-32" onClick={() => setShowForm(!showForm)}>Toggle Form</button>
       </div>
       <div className="flex-1">
         <div className="max-w-6/1 mx-auto p-4 ">
-        {showForm && (
-          <form
-            onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
-            className="max-w-md mx-auto rounded-md bg-white shadow-md my-4 p-4"
-          >
-            <h2 className="text-2xl font-medium mb-4 text-center">
-              {newOrder._id ? 'Edit Order' : 'Add New Order'}
-            </h2>
-            {formFields.map((field) => (
-              <div key={field.id} className="mb-4">
-                <label htmlFor={field.name} className="block text-gray-700 font-bold mb-2">
-                  {field.label}:
-                </label>
-                <input
-                  type={field.type}
-                  id={field.name}
-                  name={field.name}
-                  value={newOrder[field.name]}
-                  onChange={handleInputChange}
-                  className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
-                />
-              </div>
-            ))}
-            <div className="mb-4">
-              <label htmlFor="status" className="block text-gray-700 font-bold mb-2">
-                Status:
-              </label>
-              <select
-                id="status"
-                name="status"
-                value={newOrder.status}
-                onChange={(e) => handleStatusChange(e, newOrder._id)}
-                className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
-              >
-                {statusOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
+          {showForm && (
+            <form
+              onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
+              className="bg-white shadow-md my-4 p-4 grid grid-cols-2 gap-4"
+            >
+              <div className="flex flex-col">
+                <h2 className="text-2xl font-medium mb-4 text-center">
+                  {newOrder._id ? 'Edit Order' : 'Add New Order'}
+                </h2>
+                {formFields.map((field) => (
+                  <div key={field.id} className="mb-4">
+                    <label htmlFor={field.name} className="block text-gray-700 font-bold mb-2">
+                      {field.label}:
+                    </label>
+                    <input
+                      type={field.type}
+                      id={field.name}
+                      name={field.name}
+                      value={newOrder[field.name]}
+                      onChange={handleInputChange}
+                      className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
+                    />
+                  </div>
                 ))}
-              </select>
-            </div>
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                {newOrder._id ? 'Update Order' : 'Add Order'}
-              </button>
-            </div>
-          </form>
+              </div>
+              <div className="flex flex-col bg-gray-100 p-4 rounded-md shadow-md">
+                <h2 className="text-2xl font-medium mb-4 text-center">
+                  Order Preview
+                </h2>
+                <p><span className="font-bold">Email:</span> {newOrder.email}</p>
+                <p><span className="font-bold">Quantity:</span> {newOrder.quantity}</p>
+                <p><span className="font-bold">Model:</span> {newOrder.model}</p>
+                <p><span className="font-bold">Color:</span> {newOrder.color}</p>
+                <p><span className="font-bold">Status:</span> {newOrder.status}</p>
+              </div>
+              <div className="col-span-2 flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  {newOrder._id ? 'Update Order' : 'Add Order'}
+                </button>
+              </div>
+            </form>
+
+
           )}
           <table className="table-auto w-full">
             <thead>
@@ -221,16 +217,16 @@ function App() {
                       )}
                     </td>
                   ))}
-                  <td className="border px-4 py-2 w-1/6">
+                  <td className="border px-4 py-2 w-1/12 text-center">
                     <button
                       onClick={() => handleDeleteClick(order._id)}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+                      className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
                     >
                       Delete
                     </button>
                     <button
                       onClick={() => handleEditClick(order)}
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                       Edit
                     </button>
