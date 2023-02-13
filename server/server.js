@@ -23,13 +23,17 @@ const orderSchema = new mongoose.Schema({
     enum: ['Nowe', 'W realizacji', 'Zrealizowane', 'Oczekuje na płatność', 'Anulowane'],
     default: 'Nowe',
   },
+  created_at: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 const Order = mongoose.model('Order', orderSchema);
 
 app.get('/orders', async (req, res) => {
   try {
-    const orders = await Order.find().select('_id email quantity model color status');
+    const orders = await Order.find().select('_id email quantity model color status created_at');
     res.json(orders);
   } catch (err) {
     console.error(err);

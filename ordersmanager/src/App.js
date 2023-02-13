@@ -5,16 +5,19 @@ const formFields = [{ id: 'email', name: 'email', label: 'Email', type: 'email' 
 
 const statusOptions = [{ label: 'Nowe', value: 'Nowe' }, { label: 'W trakcie realizacji', value: 'W trakcie realizacji' }, { label: 'Zrealizowane', value: 'Zrealizowane' }, { label: 'Oczekuje na płatność', value: 'Oczekuje na płatność' },];
 
+const opcjeDaty = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
 const tableHeaders = [
   { name: '_id', label: 'ID', type: 'text', className: 'px-4 py-2 w-1/10' },
   { name: 'email', label: 'Email', type: 'email', className: 'px-4 py-2 w-1/10' },
   { name: 'quantity', label: 'Quantity', type: 'number', className: 'px-4 py-2 w-1/10' },
   { name: 'model', label: 'Model', type: 'text', className: 'px-4 py-2 w-1/10' },
   { name: 'color', label: 'Color', type: 'text', className: 'px-4 py-2 w-1/10' },
+  { name: 'date', label: 'Date', type: 'text', className: 'px-4 py-2 w-1/10' },
   { name: 'status', label: 'Status', type: 'select', className: 'px-4 py-2 w-1/10' },
 ];
-
 function App() {
+  
   const [orders, setOrders] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newOrder, setNewOrder] = useState({
@@ -55,8 +58,16 @@ function App() {
   const handleAddOrder = (e) => {
     e.preventDefault();
 
+    const currentDate = new Date(); // get the current date and time
+    const formattedDate = currentDate.toLocaleString(); // format the date as a string
+
+    const newOrderWithDate = { // add the formatted date to the new order object
+      ...newOrder,
+      date: formattedDate,
+    };
+
     axios
-      .post('http://localhost:5000/orders', newOrder)
+      .post('http://localhost:5000/orders', newOrderWithDate)
       .then((res) => {
         setOrders([...orders, res.data]);
         setNewOrder({
@@ -199,8 +210,10 @@ function App() {
                 <tr key={order._id}>
                   <td className="border px-4 py-2 w-1/12">{index}</td>
                   {tableHeaders.map((header) => (
-                    <td key={header.name} className="border px-4 py-2 w-1/8">
-                      {header.type === 'select' ? (
+                    <td className="border px-4 py-2 w-1/8">
+                      {header.name === 'date' ? (
+                        <span>{new Date(order.created_at).toLocaleString('pl-PL',opcjeDaty)}</span>
+                      ) : header.type === 'select' ? (
                         <select
                           value={order[header.name]}
                           onChange={(e) => handleFieldChange(e, order._id, header.name)}
