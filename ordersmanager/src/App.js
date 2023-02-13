@@ -170,6 +170,24 @@ function App() {
                     />
                   </div>
                 ))}
+                 <div className="mb-4">
+              <label htmlFor="status" className="block text-gray-700 font-bold mb-2">
+                Status:
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={newOrder.status}
+                onChange={(e) => handleStatusChange(e, newOrder._id)}
+                className="border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 rounded-md shadow-sm w-full py-2 px-3"
+              >
+                {statusOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                  ))}
+                  </select>
+                </div>
               </div>
               <div className="flex flex-col bg-gray-100 p-4 rounded-md shadow-md">
                 <h2 className="text-2xl font-medium mb-4 text-center">
