@@ -210,9 +210,9 @@ function App() {
                 <tr key={order._id}>
                   <td className="border px-4 py-2 w-1/12">{index}</td>
                   {tableHeaders.map((header) => (
-                    <td className="border px-4 py-2 w-1/8">
+                    <td className="border px-4 py-2 w-1/8 text-center">
                       {header.name === 'date' ? (
-                        <span>{new Date(order.created_at).toLocaleString('pl-PL',opcjeDaty)}</span>
+                        <span className="text-gray-500 text-sm ">{new Date(order.created_at).toLocaleString('pl-PL',opcjeDaty)}</span>
                       ) : header.type === 'select' ? (
                         <select
                           value={order[header.name]}
