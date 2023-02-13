@@ -16,6 +16,7 @@ const tableHeaders = [
 
 function App() {
   const [orders, setOrders] = useState([]);
+  const [showForm, setShowForm] = useState(false);
   const [newOrder, setNewOrder] = useState({
     email: '',
     quantity: '',
@@ -95,6 +96,7 @@ function App() {
 
   const handleEditClick = (order) => {
     setNewOrder(order);
+    setShowForm(true);
   };
 
   const handleDeleteClick = (id) => {
@@ -122,18 +124,18 @@ function App() {
 
   return (
     <div className="flex">
-      <div className="w-1/25 bg-gray-100">
+      <div className="w-1/25 bg-gray-100"> {/* First collumn */}
+
         {statusOptions.map((option) => (
           <div key={option.value} className="px-4 py-2 border-b">{option.label}</div>
         ))}
       </div>
-      <div className="w-1/6 bg-gray-200">
-        {formFields.map((field) => (
-          <div key={field.id} className="px-4 py-2 border-b">{field.label}</div>
-        ))}
+      <div className="w-1/6 bg-gray-200"> {/* First collumn */}
+      <button  className="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => setShowForm(!showForm) }>Toggle Form</button>
       </div>
       <div className="flex-1">
         <div className="max-w-6/1 mx-auto p-4 ">
+        {showForm && (
           <form
             onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}
             className="max-w-md mx-auto rounded-md bg-white shadow-md my-4 p-4"
@@ -183,6 +185,7 @@ function App() {
               </button>
             </div>
           </form>
+          )}
           <table className="table-auto w-full">
             <thead>
               <tr>
