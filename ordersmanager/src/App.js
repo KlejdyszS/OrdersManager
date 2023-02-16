@@ -1,21 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import OrderPreview from './components/OrderPreview';
 import OrderTable from './components/OrderTable';
 import OrderForm from './components/OrderForm';
-import { formFields, statusOptions } from './constants';
+import { formFields, statusOptions, tableHeaders, opcjeDaty } from './constants';
 
-const opcjeDaty = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-
-const tableHeaders = [
-  { name: '_id', label: 'ID', type: 'text', className: 'px-4 py-2 w-1/10' },
-  { name: 'email', label: 'Email', type: 'email', className: 'px-4 py-2 w-1/10' },
-  { name: 'quantity', label: 'Quantity', type: 'number', className: 'px-4 py-2 w-1/10' },
-  { name: 'model', label: 'Model', type: 'text', className: 'px-4 py-2 w-1/10' },
-  { name: 'color', label: 'Color', type: 'text', className: 'px-4 py-2 w-1/10' },
-  { name: 'date', label: 'Date', type: 'text', className: 'px-4 py-2 w-1/10' },
-  { name: 'status', label: 'Status', type: 'select', className: 'px-4 py-2 w-1/10' },
-];
 
 function App() {
   const [orders, setOrders] = useState([]);
