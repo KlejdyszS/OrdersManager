@@ -2,7 +2,7 @@ import React from 'react';
 
 function OrderPreview({ order }) {
     const modelPairs = order.model || [];
-    console.log(order.model)
+  //  console.log(order.model)
     return (
       <div className="flex flex-col bg-gray-100 p-4 rounded-md shadow-md">
         <h2 className="text-2xl font-medium mb-4 text-center">
