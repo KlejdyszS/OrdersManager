@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const orderSchema = new mongoose.Schema({
   email: String,
-  quantity: Number,
+  quantity: String,
   model: [
     {
       word: String,
