@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OrderTable from './components/OrderTable';
 import OrderForm from './components/OrderForm';
-import { formFields, statusOptions, tableHeaders, opcjeDaty } from './constants';
-
+import { tableHeaders, statusOptions, opcjeDaty } from './constants';
 
 function App() {
   const [orders, setOrders] = useState([]);
@@ -11,11 +10,10 @@ function App() {
   const [newOrder, setNewOrder] = useState({
     email: '',
     quantity: '',
-    model: '',
+    model: [{ word: '', number: '' }],
     color: '',
     status: 'Nowe',
   });
-
   useEffect(() => {
     axios
       .get('http://localhost:5000/orders')
@@ -34,7 +32,7 @@ function App() {
   const handleStatusChange = (e, id) => {
     const updatedOrders = orders.map((order) => {
       if (order._id === id) {
-        order.status = e.target.value;
+        order.status = e.target.value.toString(); // Convert the value to a string
         axios.put(`http://localhost:5000/orders/${id}`, order);
       }
       return order;
@@ -45,15 +43,16 @@ function App() {
 
   const handleAddOrder = (e) => {
     e.preventDefault();
-
-    const currentDate = new Date(); // get the current date and time
-    const formattedDate = currentDate.toLocaleString(); // format the date as a string
-
-    const newOrderWithDate = { // add the formatted date to the new order object
+  
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString();
+  
+    const newOrderWithDate = {
       ...newOrder,
       date: formattedDate,
+      model: newOrder.model,
     };
-
+  
     axios
       .post('http://localhost:5000/orders', newOrderWithDate)
       .then((res) => {
@@ -61,7 +60,7 @@ function App() {
         setNewOrder({
           email: '',
           quantity: '',
-          model: '',
+          model: [{ word: '', number: '' }],
           color: '',
           status: 'Nowe',
         });
@@ -72,16 +71,23 @@ function App() {
   };
 
   const handleUpdateOrder = (id) => {
+    const orderToUpdate = orders.find((order) => order._id === id);
+  
+    const updatedOrder = {
+      ...orderToUpdate,
+      email: newOrder.email,
+      quantity: newOrder.quantity,
+      model: newOrder.model.map((pair) => ({ word: pair.word, number: pair.number })),
+      color: newOrder.color,
+      status: newOrder.status,
+    };
+  
     axios
-      .put(`http://localhost:5000/orders/${id}`, newOrder)
+      .put(`http://localhost:5000/orders/${id}`, updatedOrder)
       .then(() => {
         const updatedOrders = orders.map((order) => {
           if (order._id === id) {
-            order.email = newOrder.email;
-            order.quantity = newOrder.quantity;
-            order.model = newOrder.model;
-            order.color = newOrder.color;
-            order.status = newOrder.status;
+            return updatedOrder;
           }
           return order;
         });
@@ -91,12 +97,15 @@ function App() {
         console.error(err);
       });
   };
+  
+const handleEditClick = (order) => {
+  const newModel = Array.isArray(order.model)
+    ? order.model.map((item) => ({ ...item }))
+    : [{ word: '', number: '' }];
 
-  const handleEditClick = (order) => {
-    setNewOrder(order);
-    setShowForm(true);
-  };
-
+  setNewOrder({ ...order, model: newModel });
+  setShowForm(true);
+};
   const handleDeleteClick = (id) => {
     axios
       .delete(`http://localhost:5000/orders/${id}`)
@@ -119,49 +128,61 @@ function App() {
     setOrders(updatedOrders);
   };
 
-  return (
-    <div className="flex">
-      <div className="w-1/25 bg-gray-100">
-        {statusOptions.map((option) => (
-          <div key={option.value} className="px-4 py-2 border-b">
-            {option.label}
-          </div>
-        ))}
-      </div>
-      <div className="w-1/8 bg-gray-200">
-        <button
-          className="bg-blue-500 text-white py-2 px-4 m-4 rounded focus:outline-none focus:shadow-outline w-32"
-          onClick={() => setShowForm(!showForm)}
-        >
-          Toggle Form
-        </button>
-      </div>
-      <div className="flex-1">
-        <div className="max-w-6/1 mx-auto p-4 ">
-          {showForm && (
-            <OrderForm
-              newOrder={newOrder}
-              formFields={formFields}
-              statusOptions={statusOptions}
-              handleInputChange={handleInputChange}
-              handleStatusChange={(e) => handleStatusChange(e, newOrder._id)}
-              handleAddOrder={handleAddOrder}
-              handleUpdateOrder={() => handleUpdateOrder(newOrder._id)}
-            />
-          )}
-          <OrderTable
-            orders={orders}
-            tableHeaders={tableHeaders}
-            statusOptions={statusOptions}
-            handleFieldChange={handleFieldChange}
-            handleDeleteClick={handleDeleteClick}
-            handleEditClick={handleEditClick}
-            opcjeDaty={opcjeDaty}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
+  const handleAddPair = () => {
+    setNewOrder({ ...newOrder, model: [...newOrder.model, { word: '', number: '' }] });
+  };
 
-export default App;
+    const handlePairInputChange = (index, event) => {
+    const { name, value } = event.target;
+    const newPairs = [...newOrder.model];
+    newPairs[index][name] = value;
+    setNewOrder({ ...newOrder, model: newPairs });
+    };
+    
+    return (
+    <div className="flex">
+    <div className="w-1/25 bg-gray-100">
+    {statusOptions.map((option) => (
+    <div key={option.value} className="px-4 py-2 border-b">
+    {option.label}
+    </div>
+    ))}
+    </div>
+    <div className="w-1/8 bg-gray-200">
+    <button
+    className="bg-blue-500 text-white py-2 px-4 m-4 rounded focus:outline-none focus:shadow-outline w-32"
+    onClick={() => setShowForm(!showForm)}
+    >
+    Toggle Form
+    </button>
+    </div>
+    <div className="flex-1">
+    <div className="max-w-6/1 mx-auto p-4 ">
+    {showForm && (
+    <OrderForm
+    newOrder={newOrder}
+    handleInputChange={handleInputChange}
+    handleStatusChange={(e) => handleStatusChange(e, newOrder._id)}
+    handleAddOrder={handleAddOrder}
+    handleUpdateOrder={() => handleUpdateOrder(newOrder._id)}
+    handleAddPair={handleAddPair}
+    handlePairInputChange={handlePairInputChange}
+    statusOptions={statusOptions}
+    />
+    )}
+    <OrderTable
+             orders={orders}
+             tableHeaders={tableHeaders}
+             statusOptions={statusOptions}
+             handleFieldChange={handleFieldChange}
+             handleDeleteClick={handleDeleteClick}
+             handleEditClick={handleEditClick}
+             opcjeDaty={opcjeDaty}
+           />
+    </div>
+    </div>
+    </div>
+    );
+    }
+    
+    export default App;
