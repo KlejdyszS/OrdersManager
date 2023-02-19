@@ -9,7 +9,7 @@ const OrderForm = ({
   handleAddOrder,
   handleUpdateOrder,
 }) => {
-  const [modelPairs, setModelPairs] = useState([]);
+    const [modelPairs, setModelPairs] = useState(newOrder.model);
 
   const handleAddPair = () => {
     setModelPairs([...modelPairs, { word: '', number: '' }]);
@@ -36,6 +36,7 @@ const OrderForm = ({
     }));
   };
 
+  console.log(modelPairs)
   return (
     <form
         onSubmit={newOrder._id ? () => handleUpdateOrder(newOrder._id) : handleAddOrder}

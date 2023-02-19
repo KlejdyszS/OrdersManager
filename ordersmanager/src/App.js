@@ -100,8 +100,8 @@ function App() {
   
 const handleEditClick = (order) => {
   const newModel = Array.isArray(order.model)
-    ? order.model.map((item) => ({ ...item }))
-    : [{ word: '', number: '' }];
+  ? order.model.map((item) => ({ word: item.word, number: item.number }))
+  : [{ word: '', number: '' }];
 
   setNewOrder({ ...order, model: newModel });
   setShowForm(true);
